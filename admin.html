@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Cantinho das Massas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D4420A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cantinho Admin">
+<link rel="apple-touch-icon" href="logo.jpeg">
+</head>
+<body>
+<div class="wrap">
+
+  <div class="login-box" id="login-box">
+    <div class="login-logo">⚙️</div>
+    <h1>Painel Admin</h1>
+    <p>Cantinho das Massas — área restrita</p>
+    <input class="inp" type="email" id="email" placeholder="E-mail" style="margin-bottom:12px">
+    <input class="inp" type="password" id="senha" placeholder="Digite a senha"
+           onkeydown="if(event.key==='Enter') login()">
+    <button class="btn btn-login" onclick="login()">🔐 Entrar</button>
+    <div class="hint">Use o e-mail e senha cadastrados no Firebase Auth</div>
+  </div>
+
+  <div id="painel" style="display:none;">
+    <div class="admin-header">
+      <h1>⚙️ Painel Admin</h1>
+      <p>Cantinho das Massas · Gerencie tudo aqui</p>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏪 Status da Loja</div>
+      <div class="toggle-row">
+        <div class="toggle-info">
+          <div class="label">Loja</div>
+          <div class="status aberta" id="status-texto">Aberta ✅</div>
+        </div>
+        <button class="toggle-switch on" id="toggle-loja" onclick="toggleLoja()"></button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📱 Número do WhatsApp</div>
+      <div class="info-box">
+        Digite apenas os números com DDI + DDD.<br>
+        Ex: <strong>5521999999999</strong> (55 = Brasil, 21 = Rio de Janeiro)
+      </div>
+      <input class="inp" type="tel" id="whatsapp-inp" placeholder="5521999999999" style="margin-bottom:0">
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍝 Massas</div>
+      <div id="admin-massas"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍅 Molhos</div>
+      <div id="admin-molhos"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🥩 Proteínas <span style="font-weight:400;font-size:13px;color:var(--muted)">(com preço)</span></div>
+      <div id="admin-proteinas"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🥔 Sabores Batata <span style="font-weight:400;font-size:13px;color:var(--muted)">(com preço)</span></div>
+      <div id="admin-saboresBatata"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌽 Sabores Cuscuz <span style="font-weight:400;font-size:13px;color:var(--muted)">(com preço)</span></div>
+      <div id="admin-saboresCuscuz"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎁 Adicionais Grátis</div>
+      <div id="admin-adicionaisGratis"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔥 Adicionais Pagos</div>
+      <div id="admin-adicionaisPagos"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🍱 Pratos Executivos <span style="font-weight:400;font-size:13px;color:var(--muted)">(com preço)</span></div>
+      <div id="admin-executivos"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔑 Alterar Senha Admin</div>
+      <div class="info-box" style="background:#FFF3E0; border-color:#FFB74D;">
+        ⚠️ Altere sua senha diretamente no <strong>Firebase Authentication</strong> (Console do Firebase)
+      </div>
+    </div>
+
+    <button class="btn btn-save" onclick="salvar()">💾 Salvar Todas as Alterações</button>
+    <button class="btn btn-out" onclick="sair()">↩ Sair do Painel</button>
+    <br><br>
+  </div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey:            "AIzaSyBn1ES36a48KjBYXtqRxOCqrAomS8t8bmY",
+  authDomain:        "cantinho-das-massas-f089d.firebaseapp.com",
+  databaseURL:       "https://cantinho-das-massas-f089d-default-rtdb.firebaseio.com",
+  projectId:         "cantinho-das-massas-f089d",
+  storageBucket:     "cantinho-das-massas-f089d.firebasestorage.app",
+  messagingSenderId: "603348403182",
+  appId:             "1:603348403182:web:74a8eb6f1e626005a604ff"
+};
+
+const _app = initializeApp(firebaseConfig);
+const db   = getDatabase(_app);
+const auth = getAuth(_app);
+
+const CARDAPIO_DEFAULT = {
+  lojaAberta: true,
+  whatsapp: '',
+  massas: [
+    { nome: 'Espaguete',  img: 'img/espaguete.jpeg',  desc: 'Clássico e delicioso', ativo: true },
+    { nome: 'Talharim',   img: 'img/talharim.jpeg',   desc: 'Massa larga e macia',  ativo: true },
+    { nome: 'Penne',      img: 'img/penne.jpeg',       desc: 'Tubinhos crocantes',   ativo: true },
+    { nome: 'Gravata',    img: 'img/gravata.jpeg',     desc: 'Formato divertido',    ativo: true },
+    { nome: 'Parafuso',   img: 'img/parafuso.jpeg',   desc: 'Espiral irresistível',  ativo: true },
+  ],
+  molhos: [
+    { nome: 'Bolonhesa',              img: 'img/molho_bolonhesa.jpeg', desc: 'O favorito',         ativo: true },
+    { nome: 'Branco (Bechamel)',       img: 'img/molho_branco.jpeg',   desc: 'Cremoso e suave',     ativo: true },
+    { nome: 'Vermelho com Manjericão', img: 'img/molho_vermelho.jpeg', desc: 'Levinho e aromático', ativo: true },
+    { nome: '4 Queijos',              img: 'img/molho_4queijos.jpeg', desc: 'Puro indulgência',     ativo: true },
+    { nome: 'Sem molho',              img: 'img/fundo_branco.jpeg',   desc: 'Apenas a massa',       ativo: true },
+  ],
+  adicionaisGratis: [
+    { nome: 'Bacon com Calabresa', img: 'img/bacon_calabresa.jpeg',  desc: 'Defumado e crocante', ativo: true },
+    { nome: 'Milho e Ervilha',     img: 'img/milho_ervilha.jpeg',    desc: 'Crocância e leveza',  ativo: true },
+    { nome: 'Brócolis',            img: 'img/brocolis.jpeg',         desc: 'Refogado no alho',    ativo: true },
+    { nome: 'Pimenta Biquinho',    img: 'img/pimenta_biquinho.jpeg', desc: 'Suave e especial',    ativo: true },
+    { nome: 'Presunto Picado',     img: 'img/presunto_picado.jpeg',  desc: 'Pedaços generosos',   ativo: true },
+    { nome: 'Mussarela Ralada',    img: 'img/mussarela.jpeg',        desc: 'Queijo derretendo',   ativo: true },
+  ],
+  proteinas: [
+    { nome: 'Frango Cremoso',          img: 'img/frango.jpeg',          desc: 'Frango desfiado cremoso',     preco: 25.00, ativo: true },
+    { nome: 'Carne Moída',             img: 'img/carne_moida.jpeg',     desc: 'Temperada com ervas frescas', preco: 25.00, ativo: true },
+    { nome: 'Carne Seca com Catupiry', img: 'img/carne_seca.jpeg',      desc: 'Combinação infalível',        preco: 27.90, ativo: true },
+    { nome: 'Brasileirinha',           img: 'img/bacon_calabresa.jpeg', desc: 'Bacon + calabresa + cream',   preco: 23.90, ativo: true },
+  ],
+  saboresBatata: [
+    { nome: 'Brasileirinha',               img: 'img/fundo_batata.jpeg', desc: 'Bacon + calabresa + catupiry',      preco: 23.00, ativo: true },
+    { nome: 'Strogonoff de Carne Cremoso', img: 'img/carne_moida.jpeg',  desc: 'Carne + champignon + batata palha', preco: 25.90, ativo: true },
+    { nome: 'Carne Seca com Catupiry',     img: 'img/carne_seca.jpeg',   desc: 'Carne seca + catupiry derretido',   preco: 26.90, ativo: true },
+    { nome: 'Camarão com Catupiry',        img: 'img/frango.jpeg',       desc: 'Camarão + catupiry cremoso',        preco: 27.90, ativo: true },
+  ],
+  saboresCuscuz: [
+    { nome: 'Da Casa — O Mais Pedido', img: 'img/fundo_cuscuz.jpeg', desc: 'Frango + queijo + catupiry + biquinho', preco: 23.00, ativo: true },
+    { nome: 'Carne Seca com Catupiry', img: 'img/carne_seca.jpeg',   desc: 'Carne seca + catupiry + biquinho',      preco: 25.90, ativo: true },
+    { nome: 'Camarão',                 img: 'img/frango.jpeg',       desc: 'Camarão refogado no azeite',            preco: 27.90, ativo: true },
+  ],
+  adicionaisPagos: [
+    { nome: 'Bacon com Calabresa', img: 'img/bacon_calabresa.jpeg',  desc: 'Defumado e crocante', preco: 2.00, ativo: true },
+    { nome: 'Milho e Ervilha',     img: 'img/milho_ervilha.jpeg',    desc: 'Leve e crocante',     preco: 2.00, ativo: true },
+    { nome: 'Brócolis',            img: 'img/brocolis.jpeg',         desc: 'Refogado no alho',    preco: 2.00, ativo: true },
+    { nome: 'Pimenta Biquinho',    img: 'img/pimenta_biquinho.jpeg', desc: 'Suave e especial',    preco: 2.00, ativo: true },
+    { nome: 'Presunto Picado',     img: 'img/presunto_picado.jpeg',  desc: 'Pedaços generosos',   preco: 2.00, ativo: true },
+    { nome: 'Mussarela Ralada',    img: 'img/mussarela.jpeg',        desc: 'Queijo derretendo',   preco: 2.00, ativo: true },
+  ],
+  executivos: [
+    { nome: 'Executivo de Frango',     img: 'img/frango.jpeg',      desc: 'Arroz + feijão + frango grelhado + salada + farofa',         preco: 22.00, ativo: true },
+    { nome: 'Executivo de Carne',      img: 'img/carne_moida.jpeg', desc: 'Arroz + feijão + bife acebolado + purê + salada',            preco: 24.00, ativo: true },
+    { nome: 'Executivo de Carne Seca', img: 'img/carne_seca.jpeg',  desc: 'Arroz + feijão + carne seca + macaxeira + vinagrete',       preco: 26.00, ativo: true },
+    { nome: 'Executivo Vegetariano',   img: 'img/brocolis.jpeg',    desc: 'Arroz + feijão + legumes grelhados + ovo + salada',          preco: 20.00, ativo: true },
+  ],
+};
+
+let cardapio = {};
+
+// ── AUTH COM FIREBASE ─────────────────────────────────────
+window.login = async function() {
+  const email = document.getElementById('email').value;
+  const senha = document.getElementById('senha').value;
+  
+  if (!email || !senha) {
+    toast('❌ Digite e-mail e senha!');
+    return;
+  }
+  
+  toast('⏳ Autenticando...');
+  
+  try {
+    await signInWithEmailAndPassword(auth, email, senha);
+    document.getElementById('login-box').style.display = 'none';
+    document.getElementById('painel').style.display = 'block';
+    carregarCardapio();
+    toast('✅ Login realizado com sucesso!');
+  } catch (erro) {
+    console.error('Erro no login:', erro);
+    if (erro.code === 'auth/user-not-found') {
+      toast('❌ Usuário não encontrado!');
+    } else if (erro.code === 'auth/wrong-password') {
+      toast('❌ Senha incorreta!');
+    } else if (erro.code === 'auth/invalid-email') {
+      toast('❌ E-mail inválido!');
+    } else {
+      toast('❌ Erro ao fazer login. Verifique suas credenciais.');
+    }
+    document.getElementById('senha').value = '';
+  }
+};
+
+window.sair = async function() {
+  try {
+    await signOut(auth);
+    document.getElementById('login-box').style.display = 'block';
+    document.getElementById('painel').style.display = 'none';
+    document.getElementById('email').value = '';
+    document.getElementById('senha').value = '';
+    toast('✅ Logout realizado!');
+  } catch (erro) {
+    toast('❌ Erro ao sair');
+  }
+};
+
+// ── CARREGAR DO FIREBASE ──────────────────────────────────
+async function carregarCardapio() {
+  toast('⏳ Carregando...');
+  try {
+    const snapshot = await get(ref(db, 'cardapio'));
+    if (snapshot.exists()) {
+      cardapio = snapshot.val();
+      Object.keys(CARDAPIO_DEFAULT).forEach(k => {
+        if (cardapio[k] === undefined) cardapio[k] = CARDAPIO_DEFAULT[k];
+      });
+    } else {
+      cardapio = JSON.parse(JSON.stringify(CARDAPIO_DEFAULT));
+    }
+  } catch (e) {
+    cardapio = JSON.parse(JSON.stringify(CARDAPIO_DEFAULT));
+    toast('⚠️ Sem conexão. Usando dados padrão.');
+  }
+  renderAdmin();
+}
+
+// ── RENDERIZAR ────────────────────────────────────────────
+function renderAdmin() {
+  const tog  = document.getElementById('toggle-loja');
+  const stxt = document.getElementById('status-texto');
+  if (cardapio.lojaAberta) {
+    tog.classList.add('on');
+    stxt.textContent = 'Aberta ✅';
+    stxt.className = 'status aberta';
+  } else {
+    tog.classList.remove('on');
+    stxt.textContent = 'Fechada 🔴';
+    stxt.className = 'status fechada';
+  }
+  document.getElementById('whatsapp-inp').value = cardapio.whatsapp || '';
+
+  renderSecao('admin-massas',           cardapio.massas,           false);
+  renderSecao('admin-molhos',           cardapio.molhos,           false);
+  renderSecao('admin-proteinas',        cardapio.proteinas,        true);
+  renderSecao('admin-saboresBatata',    cardapio.saboresBatata,    true);
+  renderSecao('admin-saboresCuscuz',    cardapio.saboresCuscuz,    true);
+  renderSecao('admin-adicionaisGratis', cardapio.adicionaisGratis, false);
+  renderSecao('admin-adicionaisPagos',  cardapio.adicionaisPagos,  true);
+  renderSecao('admin-executivos',       cardapio.executivos,       true);
+}
+
+function renderSecao(cid, itens, temPreco) {
+  const d = document.getElementById(cid);
+  if (!d) return;
+  d.innerHTML = '';
+  (itens || []).forEach((item, i) => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    const priceHtml = temPreco ? `
+      <div class="price-wrap">
+        <div class="price-label">R$</div>
+        <input class="price-inp" type="number" step="0.10" min="0"
+               value="${(item.preco || 0).toFixed(2)}"
+               data-cid="${cid}" data-idx="${i}" onchange="updPreco(this)">
+      </div>` : '';
+    row.innerHTML = `
+      <input class="item-check" type="checkbox"
+             ${item.ativo !== false ? 'checked' : ''}
+             data-cid="${cid}" data-idx="${i}" onchange="updAtivo(this)">
+      <div class="item-name">
+        ${item.nome}
+        ${item.desc ? `<small>${item.desc}</small>` : ''}
+      </div>
+      ${priceHtml}`;
+    d.appendChild(row);
+  });
+}
+
+// ── AÇÕES ─────────────────────────────────────────────────
+window.toggleLoja = function() {
+  cardapio.lojaAberta = !cardapio.lojaAberta;
+  renderAdmin();
+};
+
+window.updAtivo = function(el) {
+  const chave = el.dataset.cid.replace('admin-', '');
+  const i = parseInt(el.dataset.idx);
+  if (cardapio[chave]?.[i]) cardapio[chave][i].ativo = el.checked;
+};
+
+window.updPreco = function(el) {
+  const chave = el.dataset.cid.replace('admin-', '');
+  const i = parseInt(el.dataset.idx);
+  if (cardapio[chave]?.[i]) cardapio[chave][i].preco = parseFloat(el.value) || 0;
+};
+
+// ── SALVAR NO FIREBASE ────────────────────────────────────
+window.salvar = async function() {
+  cardapio.whatsapp = document.getElementById('whatsapp-inp').value.trim().replace(/\D/g, '');
+
+  const filtrado = {
+    lojaAberta:       cardapio.lojaAberta,
+    whatsapp:         cardapio.whatsapp,
+    massas:           (cardapio.massas           || []).filter(i => i.ativo !== false),
+    molhos:           (cardapio.molhos           || []).filter(i => i.ativo !== false),
+    adicionaisGratis: (cardapio.adicionaisGratis || []).filter(i => i.ativo !== false),
+    proteinas:        (cardapio.proteinas        || []).filter(i => i.ativo !== false),
+    saboresBatata:    (cardapio.saboresBatata    || []).filter(i => i.ativo !== false),
+    saboresCuscuz:    (cardapio.saboresCuscuz    || []).filter(i => i.ativo !== false),
+    adicionaisPagos:  (cardapio.adicionaisPagos  || []).filter(i => i.ativo !== false),
+    executivos:       (cardapio.executivos        || []).filter(i => i.ativo !== false),
+  };
+
+  try {
+    await set(ref(db, 'cardapio'), filtrado);
+    toast('✅ Salvo! O app já atualizou em tempo real.');
+  } catch (e) {
+    toast('❌ Erro ao salvar. Verifique a conexão.');
+    console.error(e);
+  }
+};
+
+// ── TOAST ─────────────────────────────────────────────────
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+// Verificar se já está logado ao carregar
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    document.getElementById('login-box').style.display = 'none';
+    document.getElementById('painel').style.display = 'block';
+    carregarCardapio();
+  }
+});
+
+</script>
+</body>
+</html>
