@@ -1,173 +1,146 @@
-# 🍝 Cantinho das Massas
+# 🍝 Cantinho das Massas  
+### Projeto End-to-End de Dados + Produto
 
-> **De um problema real a uma solução digital: como dados guiaram a criação de um delivery app que reduziu erros em 100%**
+> **De um problema real a uma solução digital orientada por dados**  
+> Transformação de um processo manual em um sistema automatizado, reduzindo erros e aumentando a eficiência operacional.
 
-🔗 **App ao vivo**: [cantinho-das-massas.netlify.app](https://cantinho-das-massas.netlify.app)  
-🔗 **Painel Admin**: [cantinho-das-massas.netlify.app/admin.html](https://cantinho-das-massas.netlify.app/admin.html)
-
----
-
-## 🎯 Contexto: O Problema Real
-
-Uma **restaurante local** enfrentava:
-
-| Métrica | Valor |
-|---------|-------|
-| Pedidos perdidos por erro de anotação | **~15%** |
-| Tempo médio para fechar um pedido | **8 minutos** |
-| Abandono durante o processo | **~30%** |
-| Contato manual necessário | **100% dos pedidos** |
-
-**Causa raiz**: Processo manual via WhatsApp com anotação em papel.
+🔗 **App ao vivo**: https://cantinho-das-massas.netlify.app  
+🔗 **Painel Admin**: https://cantinho-das-massas.netlify.app/admin.html  
 
 ---
 
-## 📊 Abordagem Analítica
+## 📱 Preview da Aplicação
 
-Como estudante e entusiasta de **Análise de Dados**, estruturei este projeto como um **case completo de Product Analytics**:
-
-### 1. Coleta e Análise de Dados
-┌──────────────────────────────────────────────────────────┐
-│ PROBLEMA → Hipóteses → Solução │
-│ Pedidos manuais → Alto atrito → App guiado │
-│ Erros de anotação → Falta padronização → Fluxo fixo │
-│ Abandono de carrinho→ Muitos passos → Carrinho visível│
-└──────────────────────────────────────────────────────────┘
-
-
-
-### 2. Métricas de Sucesso Definidas
-
-| Métrica | Antes | Meta | Depois |
-|---------|-------|------|--------|
-| Tempo por pedido | 8 min | 3 min | **2 min** ✅ |
-| Erros de anotação | 15% | 0% | **0%** ✅ |
-| Abandono no fluxo | 30% | 10% | **5%** ✅ |
-| Pedidos com contato manual | 100% | 0% | **0%** ✅ |
-
-### 3. Loop de Feedback Contínuo
-App coleta → Firebase sincroniza → Admin analisa → Dono ajusta → App atualiza
-
-
+<p align="center">
+  <img src="./img/home-app.jpeg" width="250"/>
+  <img src="./img/cardapio-app.jpeg" width="250"/>
+  <img src="./img/checkout-app.jpeg" width="250"/>
+</p>
 
 ---
 
-## 🛠️ O que foi Construído
+## 🎯 Contexto do Problema
 
-### 👤 App do Cliente (Zero Fricção)
-- **Sem cadastro, sem login, sem atrito**
-- Fluxo guiado em menos de 10 cliques
-- Carrinho flutuante visível o tempo todo
-- Pedido vai direto para o WhatsApp (100% automático)
+Um restaurante local operava com pedidos via WhatsApp, enfrentando:
 
-### 👨‍🍳 Painel Admin (Controle Total)
-- Login seguro com Firebase Authentication
-- Gerencie cardápio, preços e disponibilidade
-- Abra/fecha a loja em tempo real
-- Alterações refletem instantaneamente no app
+| Métrica | Situação Inicial |
+|--------|-----------------|
+| Pedidos com erro | ~15% |
+| Tempo médio por pedido | ~8 minutos |
+| Taxa de abandono | ~30% |
+| Processo manual | 100% |
 
-### 📊 Dashboard de Dados (Roadmap)
-Para futuras iterações, planejado:
-- Número de pedidos por dia/semana/mês
-- Itens mais pedidos (top 10)
-- Horários de pico
-- Ticket médio por cliente
+**Causa raiz:**  
+Falta de padronização e dependência de anotação manual.
 
 ---
 
-## 🏗️ Arquitetura Técnica
-┌─────────────────────────────────────────────────────────────────┐
-│ NETLIFY (Hospedagem) │
-├─────────────────────────────────────────────────────────────────┤
-│ │
-│ ┌──────────────┐ ┌──────────────┐ │
-│ │ index.html │ │ admin.html │ │
-│ │ App Cliente │ │ Painel Admin │ │
-│ └──────┬───────┘ └──────┬───────┘ │
-│ │ │ │
-│ ▼ ▼ │
-│ ┌──────────────────────────────────────────┐ │
-│ │ Firebase Realtime Database │ │
-│ │ (Sincronização em tempo real) │ │
-│ └──────────────────────────────────────────┘ │
-│ │
-│ ┌──────────────┐ ┌──────────────┐ │
-│ │ WhatsApp │◄────────│ Pedido │ │
-│ │ API │ │ Formatado │ │
-│ └──────────────┘ └──────────────┘ │
-│ │
-└─────────────────────────────────────────────────────────────────┘
+## 📊 Abordagem Orientada a Dados
 
-## 🛠️ Stack Tecnológica
-
-| Tecnologia | Uso | Por quê? |
-|------------|-----|----------|
-| HTML5 + CSS3 | Interface mobile-first | Performance e simplicidade |
-| JavaScript ES6+ | Toda lógica do app | Sem frameworks, código limpo |
-| Firebase RTDB | Banco de dados em tempo real | Sincronização instantânea |
-| PWA | Instalável no celular | Melhor experiência que app nativo |
-| Netlify | Deploy contínuo | Gratuito e prático |
+```
+Problema                  → Hipótese                  → Solução
+Pedidos manuais           → Alto atrito              → Fluxo guiado
+Erros de anotação         → Falta de padrão          → Estrutura fixa
+Abandono no processo      → Muitas etapas            → Carrinho persistente
+```
 
 ---
 
-## ✨ Funcionalidades
+## 📈 Resultados Obtidos
 
-### 👤 Cliente
-- [x] Fluxo guiado (Massa / Batata / Cuscuz / Executivo)
-- [x] Quantidade por item (+ / -)
-- [x] Carrinho flutuante com múltiplos itens
-- [x] Pedido formatado direto no WhatsApp
-- [x] Instalação como app (PWA)
+| Métrica | Antes | Depois |
+|--------|------|--------|
+| Tempo por pedido | 8 min | **2 min** |
+| Erros de anotação | 15% | **0%** |
+| Abandono no fluxo | 30% | **5%** |
+| Processo manual | 100% | **0%** |
 
-### 🔧 Admin
-- [x] Login com senha (localStorage)
-- [x] Abrir/fechar loja em tempo real
-- [x] Editar cardápio (ativar/desativar itens)
-- [x] Alterar preços
-- [x] Sincronização via Firebase
+✔ Redução do tempo operacional  
+✔ Eliminação de erros no fluxo  
+✔ Automação completa dos pedidos  
 
 ---
 
-## 🚀 Como rodar localmente
+## 🛠️ Solução Desenvolvida
+
+### 👤 App do Cliente
+- Fluxo guiado e sem login
+- Jornada otimizada (< 10 interações)
+- Carrinho flutuante
+- Pedido automático via WhatsApp
+- Instalável como PWA
+
+### 🔧 Painel Admin
+- Controle de loja em tempo real
+- Gestão de cardápio e preços
+- Atualizações instantâneas
+
+---
+
+## 🏗️ Arquitetura
+
+```
+[ Cliente ]       [ Admin ]
+     │               │
+     └──────┬────────┘
+            │
+   Firebase Realtime DB
+            │
+            ▼
+      Pedido formatado
+            │
+            ▼
+        WhatsApp
+```
+
+---
+
+## ⚙️ Stack
+
+- HTML5 + CSS3  
+- JavaScript (ES6+)  
+- Firebase Realtime Database  
+- PWA  
+- Netlify  
+
+---
+
+## 🚀 Como rodar
 
 ```bash
-# Clone o repositório
-git clone https://github.com/seu-usuario/cantinho-das-massas.git
+git clone https://github.com/JherikaSilva/cantinho-das-massas.git
+```
 
-# Abra com Live Server (VS Code)
-# Ou use qualquer servidor HTTP
+Usar Live Server ou outro servidor local  
 
-⚠️ Não abrir diretamente pelo navegador (CORS)
+---
 
-📁 Estrutura do Projeto
-├── index.html          # App principal
-├── admin.html          # Painel administrativo
-├── script.js           # Lógica completa
-├── style.css           # Estilos do app
-├── admin.css           # Estilos do admin
-├── manifest.json       # PWA
-├── logo.jpeg           # Logo do app
-└── img/                # Imagens do cardápio
+## 📁 Estrutura
 
-🔗 Links
-App: cantinho-das-massas.netlify.app
+```
+├── index.html
+├── admin.html
+├── script.js
+├── style.css
+├── admin.css
+├── manifest.json
+├── logo.jpeg
+└── img/
+```
 
-Repositório: https://github.com/JherikaSilva/cantinho-das-massas
+---
 
-📝 Aprendizados para Dados
-Este projeto me ensinou:
+## 🧠 Aprendizados
 
-UX orientada a conversão — como a interface impacta o comportamento
+- UX orientada à conversão  
+- Redução de atrito em fluxos digitais  
+- Sincronização em tempo real  
+- Estruturação de dados para decisão  
+- Desenvolvimento de produto baseado em problema real  
 
-Sincronização em tempo real — conceito aplicável a dashboards
+---
 
-Validação e sanitização — entrada de dados confiável
+## 👤 Autor
 
-Monitoramento de KPIs — controle via painel admin
-
-Loop de feedback — mudanças no cardápio refletem instantaneamente
-
-👤 Autor
-Jherika Pereira da Silva
-
+**Jherika Pereira da Silva**  
 🔗 https://www.linkedin.com/in/jherika-silva-905b85379/
