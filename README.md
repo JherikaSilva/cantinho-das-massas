@@ -1,5 +1,5 @@
 # 🍝 Cantinho das Massas  
-### Projeto End-to-End de Dados + Produto
+
 
 > **De um problema real a uma solução digital orientada por dados**  
 > Transformação de um processo manual em um sistema automatizado, reduzindo erros e aumentando a eficiência operacional.
