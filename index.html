@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Cantinho das Massas 🍝</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="app" id="app">
+
+    <!-- ══════════════════════════════════════
+         TELA 1 — INÍCIO
+         ══════════════════════════════════════ -->
+    <div class="tela active" id="tela-inicio">
+      <div class="inicio-bg"></div>
+      <div class="inicio-grain"></div>
+      <div class="inicio-gradient"></div>
+      <div class="inicio-content">
+        <div class="logo-ring">
+          <img src="logo.jpeg" alt="Cantinho das Massas"
+            onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect fill=%22%23D4420A%22 width=%22100%22 height=%22100%22/><text x=%2250%25%22 y=%2255%25%22 fill=%22white%22 font-size=%2240%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>🍝</text></svg>'">
+        </div>
+        <div class="inicio-nome">Cantinho das Massas</div>
+        <div class="inicio-tag">Sabor caseiro com toque especial ✨</div>
+        <div class="inicio-badges">
+          <span class="badge-pill">🍝 Massas Artesanais</span>
+          <span class="badge-pill">🥔 Batata Recheada</span>
+          <span class="badge-pill">🌽 Cuscuz</span>
+        </div>
+        <button class="btn-cta" onclick="iniciarPedido()">🛒 Fazer meu Pedido</button>
+        <div id="aviso-fechado" class="aviso-fechado" style="display:none">
+          🔴 Loja fechada agora. Volte mais tarde!
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 2 — O QUE VAI SER HOJE?
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-tipo">
+      <div class="tipo-bg"></div>
+      <div class="tipo-overlay"></div>
+      <div class="tela-scroll" style="flex:1;position:relative;z-index:5;">
+        <div class="tipo-head">
+          <button class="btn-back" onclick="voltar()">‹</button>
+          <div class="tipo-titulo">O que vai ser<br>hoje? 🍽️</div>
+          <div class="tipo-sub">Escolha uma categoria para começar</div>
+        </div>
+        <div class="tipo-grid">
+          <div class="tipo-card" onclick="escolherTipo('massa')">
+            <img class="tipo-card-img" src="img/fundo_massas.jpeg" alt="Massas" onerror="this.style.display='none'">
+            <div class="tipo-card-info">
+              <div class="tipo-card-nome">🍝 Massas</div>
+              <div class="tipo-card-desc">Talharim, Penne, Espaguete, Gravata e mais — com molho e proteína à sua escolha</div>
+            </div>
+            <div class="tipo-card-arrow">›</div>
+            <div class="tipo-popular-tag">⭐ Mais Pedido</div>
+          </div>
+          <div class="tipo-card" onclick="escolherTipo('batata')">
+            <img class="tipo-card-img" src="img/fundo_batata.jpeg" alt="Batata" onerror="this.style.display='none'">
+            <div class="tipo-card-info">
+              <div class="tipo-card-nome">🥔 Batata Recheada</div>
+              <div class="tipo-card-desc">Batata recheada com sabores especiais, do clássico ao premium</div>
+            </div>
+            <div class="tipo-card-arrow">›</div>
+          </div>
+          <div class="tipo-card" onclick="escolherTipo('cuscuz')">
+            <img class="tipo-card-img" src="img/fundo_cuscuz.jpeg" alt="Cuscuz" onerror="this.style.display='none'">
+            <div class="tipo-card-info">
+              <div class="tipo-card-nome">🌽 Cuscuz</div>
+              <div class="tipo-card-desc">Cuscuz nordestino cremoso, preparado na hora com sabores irresistíveis</div>
+            </div>
+            <div class="tipo-card-arrow">›</div>
+          </div>
+          <div class="tipo-card" onclick="escolherTipo('executivo')">
+            <img class="tipo-card-img" src="img/fundo_carne.jpeg" alt="Executivo" onerror="this.style.display='none'">
+            <div class="tipo-card-info">
+              <div class="tipo-card-nome">🍱 Pratos Executivos</div>
+              <div class="tipo-card-desc">Refeição completa com arroz, feijão, proteína e acompanhamento</div>
+            </div>
+            <div class="tipo-card-arrow">›</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 3 — MASSAS
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-massas">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>Escolha a Massa<span class="sub">Selecione 1 opção</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-massas"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" id="btn-ir-molhos" onclick="irParaMolhos()" disabled>Escolher Molho →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 4 — MOLHOS
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-molhos">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>Escolha o Molho<span class="sub">Selecione 1 opção</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-molhos"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" id="btn-ir-gratis" onclick="irParaAdicionaisGratis()" disabled>Adicionais Grátis →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 5 — ADICIONAIS GRÁTIS
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-adicionais-gratis">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>🎁 Adicionais Grátis<span class="sub">Escolha até 3 sem custo!</span></h2>
+      </div>
+      <div id="contador-gratis" class="contador-badge gratis" style="margin-top:8px;">0 / 3 selecionados</div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-adicionais-gratis"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" onclick="irParaProteinas()">Escolher Proteína →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 6 — PROTEÍNAS
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-proteinas">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>Escolha a Proteína<span class="sub">O preço final depende da proteína</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-proteinas"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" id="btn-ir-pagos-prot" onclick="irParaAdicionaisPagosMassa()" disabled>Turbinar Prato →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 7 — SABORES (BATATA / CUSCUZ)
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-sabores">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2 id="titulo-sabores">Escolha o Sabor<span class="sub" id="sub-sabores">Preço varia por sabor</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-sabores"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" id="btn-ir-pagos-sabor" onclick="irParaAdicionaisPagosSabor()" disabled>Turbinar Prato →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 8 — ADICIONAIS PAGOS
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-adicionais-pagos">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>🔥 Turbine seu Prato!<span class="sub">Cada item por apenas +R$ 2,00</span></h2>
+      </div>
+      <div id="contador-pagos" class="contador-badge" style="margin-top:8px;">Nenhum adicional selecionado</div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-adicionais-pagos"></div>
+      </div>
+      <div class="footer-bar two">
+        <button class="btn-secondary" onclick="pularAdicionaisPagos()">Pular</button>
+        <button class="btn-primary" onclick="irParaResumo()">Ver Resumo →</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 9 — RESUMO
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-resumo">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>🧾 Confirmar Pedido<span class="sub">Revise tudo antes de finalizar</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="resumo-card" id="resumo-content"></div>
+      </div>
+      <div class="footer-bar two">
+        <button class="btn-secondary" onclick="adicionarAoCarrinho()">➕ Adicionar ao carrinho</button>
+        <button class="btn-primary btn-whatsapp" onclick="finalizarDireto()">📲 Pedir Já!</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 10 — CARRINHO
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-carrinho">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>🛒 Seu Carrinho<span class="sub" id="sub-carrinho">0 itens</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;" id="carrinho-content"></div>
+      <div class="footer-bar two">
+        <button class="btn-secondary" onclick="continuarComprando()">+ Mais itens</button>
+        <button class="btn-primary" onclick="irParaDados()">Finalizar 📋</button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+         TELA 11 — DADOS DO CLIENTE
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-dados">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>📋 Seus Dados<span class="sub">Para finalizar o pedido</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1; padding-bottom:8px;">
+
+        <!-- NOME -->
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label">👤 Nome completo *</label>
+          <input class="form-input" id="f-nome" type="text" placeholder="Ex: Maria Silva" autocomplete="name" oninput="validarCampo(this,'nome')">
+          <div class="form-error" id="err-nome">Por favor, informe seu nome</div>
+        </div>
+
+        <!-- BAIRRO ROLÁVEL -->
+        <div class="form-group">
+          <label class="form-label">🛵 Selecione seu bairro *</label>
+          <div class="bairros-scroll" id="bairros-scroll">
+            <button type="button" class="bairro-btn" data-bairro="São José" data-taxa="7.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">São José</span>
+              <span class="bairro-taxa">R$ 7,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Itapeba" data-taxa="5.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Itapeba</span>
+              <span class="bairro-taxa">R$ 5,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Parque Nance" data-taxa="5.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Parque Nance</span>
+              <span class="bairro-taxa">R$ 5,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Ponta Grossa" data-taxa="5.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Ponta Grossa</span>
+              <span class="bairro-taxa">R$ 5,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Mumbuca" data-taxa="5.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Mumbuca</span>
+              <span class="bairro-taxa">R$ 5,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Centro" data-taxa="7.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Centro</span>
+              <span class="bairro-taxa">R$ 7,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Flamengo" data-taxa="7.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Flamengo</span>
+              <span class="bairro-taxa">R$ 7,00</span>
+            </button>
+            <button type="button" class="bairro-btn" data-bairro="Araçatiba" data-taxa="8.00" onclick="selecionarBairro(this)">
+              <span class="bairro-nome">Araçatiba</span>
+              <span class="bairro-taxa">R$ 8,00</span>
+            </button>
+          </div>
+          <div class="form-error" id="err-bairro">Selecione seu bairro</div>
+          <div id="taxa-resumo" class="taxa-resumo" style="display:none;"></div>
+        </div>
+
+        <!-- ENDEREÇO -->
+        <div class="form-group">
+          <label class="form-label">📍 Rua e número *</label>
+          <input class="form-input" id="f-endereco" type="text" placeholder="Ex: Rua das Flores, 123" autocomplete="street-address" oninput="validarCampo(this,'endereco')">
+          <div class="form-error" id="err-endereco">Informe o endereço completo</div>
+        </div>
+
+        <!-- WHATSAPP -->
+        <div class="form-group">
+          <label class="form-label">📞 WhatsApp (opcional)</label>
+          <input class="form-input" id="f-tel" type="tel" placeholder="(21) 99999-9999" autocomplete="tel" oninput="mascaraTel(this)">
+        </div>
+
+        <!-- PAGAMENTO -->
+        <div class="form-group">
+          <label class="form-label">💳 Forma de pagamento *</label>
+          <div class="select-wrap">
+            <select class="form-input" id="f-pagamento" onchange="verificarTroco()">
+              <option value="Pix">💸 Pix</option>
+              <option value="Dinheiro">💵 Dinheiro (na entrega)</option>
+              <option value="Cartão de Crédito">💳 Cartão de Crédito (na entrega)</option>
+              <option value="Cartão de Débito">💳 Cartão de Débito (na entrega)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TROCO -->
+        <div id="troco-group" class="form-group" style="display:none;">
+          <label class="form-label">💵 Troco para quanto?</label>
+          <input class="form-input" id="f-troco" type="number" placeholder="Ex: 50" min="0">
+        </div>
+
+        <!-- TOTAL COM ENTREGA -->
+        <div id="total-com-entrega" class="total-entrega-box" style="display:none;">
+          <div class="total-entrega-linha">
+            <span>🛒 Pedido</span>
+            <span id="total-pedido-val">R$ 0,00</span>
+          </div>
+          <div class="total-entrega-linha">
+            <span>🛵 Entrega (<span id="bairro-nome-resumo"></span>)</span>
+            <span id="total-taxa-val">R$ 0,00</span>
+          </div>
+          <div class="total-entrega-linha total-final">
+            <span>💰 Total Geral</span>
+            <span id="total-geral-val">R$ 0,00</span>
+          </div>
+        </div>
+
+        <!-- OBS -->
+        <div class="form-group">
+          <label class="form-label">📝 Observações (opcional)</label>
+          <textarea class="form-input" id="f-obs" rows="4" placeholder="Ex: 
+- Se fez mais de um pedido: Adicional bacon na batata brasileirinha
+- Sem cebola no cuscuz da casa"></textarea>
+          <div class="obs-dica" style="font-size: 11px; color: #8A6A5A; margin-top: 6px;">
+            💡 Dica: Especifique qual item recebe cada adicional (ex: '1x bacon na 1ª batata')
+          </div>
+        </div>
+
+      </div> <!-- fecha .tela-scroll -->
+      
+      <div class="footer-bar">
+        <button class="btn-primary btn-whatsapp" onclick="finalizar()">📲 Enviar Pedido no WhatsApp</button>
+      </div>
+    </div> <!-- fecha #tela-dados -->
+
+    <!-- ══════════════════════════════════════
+         TELA EXECUTIVOS (AGORA FORA DA TELA DADOS!)
+         ══════════════════════════════════════ -->
+    <div class="tela" id="tela-executivos">
+      <div class="header">
+        <button class="btn-back" onclick="voltar()">‹</button>
+        <h2>🍱 Pratos Executivos<span class="sub">Refeição completa do dia</span></h2>
+      </div>
+      <div class="tela-scroll" style="flex:1;">
+        <div class="opcoes-list" id="lista-executivos"></div>
+      </div>
+      <div class="footer-bar">
+        <button class="btn-primary" id="btn-ir-resumo-exec" onclick="irParaResumoExecutivo()">Ver Resumo →</button>
+      </div>
+    </div>
+
+  </div><!-- /.app -->
+
+  <!-- CARRINHO FLUTUANTE -->
+  <div id="carrinho-flutuante">
+    <div class="carrinho-pill" onclick="abrirCarrinho()">
+      <div class="carrinho-pill-icon">
+        🛒<span class="carrinho-pill-count" id="carr-count">0</span>
+      </div>
+      <div class="carrinho-pill-info">
+        <div class="carrinho-pill-titulo">Meu Carrinho</div>
+        <div class="carrinho-pill-itens" id="carr-preview"></div>
+      </div>
+      <div class="carrinho-pill-total" id="carr-total-pill">R$ 0,00</div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="script.js"></script>
+</body>
+
+</html>
