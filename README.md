@@ -1,4 +1,4 @@
-# 🍝 Cantinho das Massas — Projeto End-to-End de Dados + Produto
+# 🍝 Cantinho das Massas
 
 > **De um problema real a uma solução digital: como dados guiaram a criação de um delivery app que reduziu erros em 100%**
 
