@@ -38,6 +38,7 @@ const CARDAPIO_DEFAULT = {
     { nome: 'Penne',     img: 'img/penne.jpeg',      desc: 'Tubinhos crocantes por fora, macios por dentro' },
     { nome: 'Gravata',   img: 'img/gravata.jpeg',    desc: 'Formato divertido que prende o molho nas dobras' },
     { nome: 'Parafuso',  img: 'img/parafuso.jpeg',  desc: 'Espiral que segura cada gota de molho' },
+    { nome: 'Nhoque',    img: 'img/nhoque.jpeg',     desc: 'Massa leve e macia que derrete na boca' },
   ],
 
   molhos: [
@@ -62,6 +63,7 @@ const CARDAPIO_DEFAULT = {
     { nome: 'Carne Moída',             img: 'img/carne_moida.jpeg',     desc: 'Temperada e refogada com ervas frescas',            preco: 25.00 },
     { nome: 'Carne Seca com Catupiry', img: 'img/carne_seca.jpeg',      desc: 'Carne seca desfiada com catupiry — infalível',      preco: 27.90 },
     { nome: 'Brasileirinha',           img: 'img/bacon_calabresa.jpeg', desc: 'Bacon, calabresa e cream cheese',                   preco: 23.90 },
+    { nome: 'Camarão',                 img: 'img/camarao.jpeg',         desc: 'Camarões suculentos envolvidos no azeite',          preco: 29.90 },
   ],
 
   saboresBatata: [
